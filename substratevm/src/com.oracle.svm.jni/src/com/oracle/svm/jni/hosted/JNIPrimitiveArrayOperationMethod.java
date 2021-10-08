@@ -29,6 +29,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import org.graalvm.compiler.core.common.type.Stamp;
+import org.graalvm.compiler.core.common.type.StampFactory;
 import org.graalvm.compiler.debug.DebugContext;
 import org.graalvm.compiler.java.FrameStateBuilder;
 import org.graalvm.compiler.nodes.AbstractMergeNode;
@@ -264,7 +265,7 @@ public final class JNIPrimitiveArrayOperationMethod extends NonBytecodeStaticMet
         kit.thenPart();
         ValueNode nullHandle = kit.createConstant(JavaConstant.INT_0, providers.getWordTypes().getWordKind());
         kit.elsePart();
-        ValueNode array = kit.append(new NewArrayNode(elementType, length, true));
+        ValueNode array = kit.append(new NewArrayNode(elementType, kit.createPiNode(length, StampFactory.positiveInt()), true));
         ValueNode arrayHandle = kit.boxObjectInLocalHandle(array);
         AbstractMergeNode merge = kit.endIf();
         merge.setStateAfter(kit.getFrameState().create(kit.bci(), merge));
